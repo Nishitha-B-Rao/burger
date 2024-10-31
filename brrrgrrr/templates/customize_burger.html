@@ -1,0 +1,79 @@
+<!-- customize_burger.html -->
+{% extends "base.html" %}
+{% block content %}
+<h1>Build Your Own Burger</h1>
+<div id="ingredients-list">
+    <h2>Select Ingredients:</h2>
+    <ul id="ingredient-options">
+        {% for ingredient in ingredients %}
+            <li>
+                <input type="checkbox" class="ingredient-checkbox" data-id="{{ ingredient.id }}" data-price="{{ ingredient.price }}" data-name="{{ ingredient.name }}">
+                {{ ingredient.name }} - ${{ ingredient.price }}
+                <label>Quantity:
+                    <input type="number" class="ingredient-quantity" data-id="{{ ingredient.id }}" value="1" min="1" style="width: 50px;" disabled>
+                </label>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<h3>Your Burger</h3>
+<ul id="selected-ingredients"></ul>
+<p>Total Price: $<span id="total-price">0.00</span></p>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const ingredients = new Map();
+        const selectedIngredientsElement = document.getElementById("selected-ingredients");
+        const totalPriceElement = document.getElementById("total-price");
+
+        document.querySelectorAll(".ingredient-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", (e) => {
+                const id = e.target.getAttribute("data-id");
+                const name = e.target.getAttribute("data-name");
+                const price = parseFloat(e.target.getAttribute("data-price"));
+                const quantityInput = document.querySelector(`.ingredient-quantity[data-id="${id}"]`);
+
+                if (e.target.checked) {
+                    quantityInput.disabled = false;
+                    const quantity = parseInt(quantityInput.value);
+                    ingredients.set(id, { name, price, quantity });
+                } else {
+                    quantityInput.disabled = true;
+                    ingredients.delete(id);
+                }
+
+                updateSelectedIngredients();
+                updateTotalPrice();
+            });
+        });
+
+        document.querySelectorAll(".ingredient-quantity").forEach(input => {
+            input.addEventListener("input", (e) => {
+                const id = e.target.getAttribute("data-id");
+                const quantity = parseInt(e.target.value);
+
+                if (ingredients.has(id)) {
+                    ingredients.get(id).quantity = quantity;
+                    updateSelectedIngredients();
+                    updateTotalPrice();
+                }
+            });
+        });
+
+        const updateSelectedIngredients = () => {
+            selectedIngredientsElement.innerHTML = "";
+            ingredients.forEach(({ name, price, quantity }) => {
+                const li = document.createElement("li");
+                li.textContent = `${name} x ${quantity} - $${(price * quantity).toFixed(2)}`;
+                selectedIngredientsElement.appendChild(li);
+            });
+        };
+
+        const updateTotalPrice = () => {
+            const totalPrice = Array.from(ingredients.values()).reduce((sum, { price, quantity }) => sum + (price * quantity), 0);
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        };
+    });
+</script>
+{% endblock %}

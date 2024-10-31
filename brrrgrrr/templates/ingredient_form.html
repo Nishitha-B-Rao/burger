@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ form.instance.pk|yesno:"Edit Ingredient,Add Ingredient" }}{% endblock %}
+
+{% block content %}
+<h2>{{ form.instance.pk|yesno:"Edit Ingredient,Add Ingredient" }}</h2>
+<form method="post" enctype="multipart/form-data" class="mt-4">
+    {% csrf_token %}
+    
+    <!-- Ingredient Name -->
+    <div class="form-group">
+        <label for="id_name">Ingredient Name</label>
+        <input type="text" name="name" id="id_name" class="form-control" 
+               value="{{ form.name.value|default_if_none:'' }}" placeholder="Enter ingredient name">
+        {% if form.name.errors %}
+            <div class="text-danger">{{ form.name.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Ingredient Price -->
+    <div class="form-group">
+        <label for="id_price">Price</label>
+        <input type="number" name="price" id="id_price" class="form-control" 
+               value="{{ form.price.value|default_if_none:'' }}" placeholder="Enter price">
+        {% if form.price.errors %}
+            <div class="text-danger">{{ form.price.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Ingredient Availability -->
+    <div class="form-group form-check">
+        <input type="checkbox" name="is_available" id="id_is_available" class="form-check-input" 
+               {% if form.is_available.value %}checked{% endif %}>
+        <label for="id_is_available" class="form-check-label">Available</label>
+        {% if form.is_available.errors %}
+            <

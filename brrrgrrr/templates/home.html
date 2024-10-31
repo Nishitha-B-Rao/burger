@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="jumbotron bg-info text-white">
+        <h1 class="display-4">Welcome to Our Burger Application!</h1>
+        <hr class="my-4 border-white">
+        <p>To get started, please <a href="{% url 'login' %}" class="text-dark font-weight-bold">Login</a> or <a href="{% url 'register' %}" class="text-dark font-weight-bold">Register</a>.</p>
+    </div>
+    <div class="about-us mt-5">
+        <h2>About Us</h2>
+        <p>We are dedicated to providing a platform for sharing thoughts, experiences, and stories.</p>
+    </div>
+</div>
+<div class="container p-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0 text-center">
+            <h5 class="text-uppercase">Follow Us</h5>
+            <div class="d-flex justify-content-center">
+                <a href="#!" class="text-dark mx-2"><i class="fab fa-facebook fa-2x"></i></a>
+                <a href="#!" class="text-dark mx-2"><i class="fab fa-twitter fa-2x"></i></a>
+                <a href="#!" class="text-dark mx-2"><i class="fab fa-instagram fa-2x"></i></a>
+                <a href="#!" class="text-dark mx-2"><i class="fab fa-linkedin fa-2x"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

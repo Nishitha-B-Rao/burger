@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <h2 style="text-align: center;">Register</h2>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">          
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <!-- {{ form.as_p }} -->
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username" class="form-control" placeholder="username">
+            <small class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+            {% if form.username.errors %}
+                <div class="text-danger">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            <input type="password" name="password1" id="id_password1" class="form-control" placeholder="password">
+            <small class="form-text text-muted">
+                Your password can’t be too similar to your other personal information.<br>
+                Your password must contain at least 8 characters.<br>
+                Your password can’t be a commonly used password.<br>
+                Your password can’t be entirely numeric.
+            </small>
+            {% if form.password1.errors %}
+                <div class="text-danger">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Password confirmation</label>
+            <input type="password" name="password2" id="id_password2" class="form-control" placeholder="password">
+            <small class="form-text text-muted">Enter the same password as before, for verification.</small>
+            {% if form.password2.errors %}
+                <div class="text-danger">
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a href="{% url 'home' %}" class="btn btn-dark">Home</a>
+        <br><br>
+        <small>Already have an account? <a href="{% url 'login' %}">Login</a></small>
+    </form>
+</div>
+</div>
+</div>
+
+{% endblock %}

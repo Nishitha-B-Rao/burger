@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Ingredients{% endblock %}
+
+{% block content %}
+<h2>Manage Ingredients</h2>
+<a href="{% url 'add_ingredient' %}" class="btn btn-success mb-3">Add New Ingredient</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Available</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ingredient in ingredients %}
+        <tr>
+            <td>{{ ingredient.name }}</td>
+            <td>${{ ingredient.price }}</td>
+            <td>
+                {% if ingredient.is_available %}
+                    <span class="badge bg-success">Yes</span

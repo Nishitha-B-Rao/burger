@@ -9,9 +9,9 @@
             <li>
                 <input type="checkbox" class="ingredient-checkbox" data-id="{{ ingredient.id }}" data-price="{{ ingredient.price }}" data-name="{{ ingredient.name }}">
                 {{ ingredient.name }} - ${{ ingredient.price }}
-                <label>Quantity:
+                <!-- <label>Quantity:
                     <input type="number" class="ingredient-quantity" data-id="{{ ingredient.id }}" value="1" min="1" style="width: 50px;" disabled>
-                </label>
+                </label> -->
             </li>
         {% endfor %}
     </ul>

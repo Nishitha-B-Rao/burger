@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Ingredient, Order, CustomBurger
 
-# Register your models here.
+admin.site.register(Ingredient)
+admin.site.register(Order)
+admin.site.register(CustomBurger)

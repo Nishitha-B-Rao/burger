@@ -7,11 +7,15 @@
     <ul id="ingredient-options">
         {% for ingredient in ingredients %}
             <li>
-                <input type="checkbox" class="ingredient-checkbox" data-id="{{ ingredient.id }}" data-price="{{ ingredient.price }}" data-name="{{ ingredient.name }}">
-                {{ ingredient.name }} - ${{ ingredient.price }}
-                <label>Quantity:
-                    <input type="number" class="ingredient-quantity" data-id="{{ ingredient.id }}" value="1" min="1" style="width: 50px;" disabled>
-                </label>
+                {% if ingredient.is_available %}
+                    <input type="checkbox" class="ingredient-checkbox" data-id="{{ ingredient.id }}" data-price="{{ ingredient.price }}" data-name="{{ ingredient.name }}">
+                    {{ ingredient.name }} - ${{ ingredient.price }}
+                    <label>Quantity:
+                        <input type="number" class="ingredient-quantity" data-id="{{ ingredient.id }}" value="1" min="1" style="width: 50px;" disabled>
+                    </label>
+                {% else %}
+                    <span style="color: gray;">{{ ingredient.name }} - Not Available</span>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
@@ -21,11 +25,18 @@
 <ul id="selected-ingredients"></ul>
 <p>Total Price: $<span id="total-price">0.00</span></p>
 
+<form action="{% url 'order_confirmation' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="custom_burger_data" id="custom-burger-data">
+    <button type="submit" class="btn btn-primary">Confirm Order</button>
+</form>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const ingredients = new Map();
         const selectedIngredientsElement = document.getElementById("selected-ingredients");
         const totalPriceElement = document.getElementById("total-price");
+        const burgerDataInput = document.getElementById("custom-burger-data");
 
         document.querySelectorAll(".ingredient-checkbox").forEach(checkbox => {
             checkbox.addEventListener("change", (e) => {
@@ -63,11 +74,13 @@
 
         const updateSelectedIngredients = () => {
             selectedIngredientsElement.innerHTML = "";
-            ingredients.forEach(({ name, price, quantity }) => {
+            const selectedIngredients = Array.from(ingredients.values());
+            selectedIngredients.forEach(({ name, price, quantity }) => {
                 const li = document.createElement("li");
                 li.textContent = `${name} x ${quantity} - $${(price * quantity).toFixed(2)}`;
                 selectedIngredientsElement.appendChild(li);
             });
+            burgerDataInput.value = JSON.stringify(selectedIngredients);
         };
 
         const updateTotalPrice = () => {

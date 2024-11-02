@@ -1,0 +1,16 @@
+<!-- order_confirmation.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Order Summary</h2>
+<p>Customer: {{ user.username }}</p>
+<ul>
+    {% for ingredient, quantity in ingredients %}
+        <li>{{ ingredient.name }} - Quantity: {{ quantity }}</li>
+    {% endfor %}
+</ul>
+<p>Total Price: ${{ total_price }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>
+{% endblock %}

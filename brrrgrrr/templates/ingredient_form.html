@@ -9,9 +9,8 @@
     
     <!-- Ingredient Name -->
     <div class="form-group">
-        <label for="id_name">Ingredient Name</label>
-        <input type="text" name="name" id="id_name" class="form-control" 
-               value="{{ form.name.value|default_if_none:'' }}" placeholder="Enter ingredient name">
+        <label for="{{ form.name.id_for_label }}">Ingredient Name</label>
+        {{ form.name }}
         {% if form.name.errors %}
             <div class="text-danger">{{ form.name.errors }}</div>
         {% endif %}
@@ -19,9 +18,8 @@
 
     <!-- Ingredient Price -->
     <div class="form-group">
-        <label for="id_price">Price</label>
-        <input type="number" name="price" id="id_price" class="form-control" 
-               value="{{ form.price.value|default_if_none:'' }}" placeholder="Enter price">
+        <label for="{{ form.price.id_for_label }}">Price</label>
+        {{ form.price }}
         {% if form.price.errors %}
             <div class="text-danger">{{ form.price.errors }}</div>
         {% endif %}
@@ -29,8 +27,16 @@
 
     <!-- Ingredient Availability -->
     <div class="form-group form-check">
-        <input type="checkbox" name="is_available" id="id_is_available" class="form-check-input" 
-               {% if form.is_available.value %}checked{% endif %}>
-        <label for="id_is_available" class="form-check-label">Available</label>
+        <input type="hidden" name="is_available" value="False">  <!-- This line is crucial -->
+        {{ form.is_available }}  <!-- This renders the checkbox -->
+        <label for="{{ form.is_available.id_for_label }}" class="form-check-label">Available</label>
         {% if form.is_available.errors %}
-            <
+            <div class="text-danger">{{ form.is_available.errors }}</div>
+        {% endif %}
+    </div>
+    
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Update,Add" }}</button>
+    <a href="{% url 'ingredient_list' %}" class="btn btn-outline-secondary mt-3">Back to Ingredients</a>
+</form>
+{% endblock %}

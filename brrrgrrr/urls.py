@@ -11,7 +11,10 @@ urlpatterns = [
     path('customize-burger/', views.customize_burger, name='customize_burger'),
 
     path('ingredients/', views.ingredient_list, name='ingredient_list'),
-    path('ingredients/add/', views.add_or_edit_ingredient, name='add_ingredient'),
-    path('ingredients/edit/<int:ingredient_id>/', views.add_or_edit_ingredient, name='edit_ingredient'),
+    path('ingredients/add/', views.add_ingredient, name='add_ingredient'),
+    path('ingredients/edit/<int:ingredient_id>/', views.edit_ingredient, name='edit_ingredient'),
     path('ingredients/delete/<int:pk>/', views.delete_ingredient, name='delete_ingredient'),
+
+    path('order-confirmation/', views.order_page, name='order_confirmation'),
+    path('orders/', views.admin_orders_view, name='admin_orders'),
 ]

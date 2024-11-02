@@ -1,29 +1,44 @@
-<!-- customize_burger.html -->
 {% extends "base.html" %}
 {% block content %}
-<h1>Build Your Own Burger</h1>
-<div id="ingredients-list">
-    <h2>Select Ingredients:</h2>
-    <ul id="ingredient-options">
-        {% for ingredient in ingredients %}
-            <li>
-                {% if ingredient.is_available %}
-                    <input type="checkbox" class="ingredient-checkbox" data-id="{{ ingredient.id }}" data-price="{{ ingredient.price }}" data-name="{{ ingredient.name }}">
-                    {{ ingredient.name }} - ${{ ingredient.price }}
-                    <label>Quantity:
-                        <input type="number" class="ingredient-quantity" data-id="{{ ingredient.id }}" value="1" min="1" style="width: 50px;" disabled>
-                    </label>
-                {% else %}
-                    <span style="color: gray;">{{ ingredient.name }} - Not Available</span>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-</div>
+<div class="container py-4">
+    <a href="{% url 'my_orders' %}" class="nav-link">My Orders</a>
+    <h1>Build Your Own Burger</h1>
+    <div id="ingredients-list">
+        <h2>Select Ingredients:</h2>
+        <ul id="ingredient-options">
+            {% for ingredient in ingredients %}
+                <li>
+                    {% if ingredient.is_available %}
+                        <input type="checkbox" class="ingredient-checkbox" 
+                               data-id="{{ ingredient.id }}" 
+                               data-price="{{ ingredient.price }}" 
+                               data-name="{{ ingredient.name }}">
+                        {{ ingredient.name }} - ${{ ingredient.price }}
+                        <label>Quantity:
+                            <input type="number" class="ingredient-quantity" 
+                                   data-id="{{ ingredient.id }}" 
+                                   value="1" min="1" style="width: 50px;" disabled>
+                        </label>
+                    {% else %}
+                        <span style="color: gray;">{{ ingredient.name }} - Not Available</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<h3>Your Burger</h3>
-<ul id="selected-ingredients"></ul>
-<p>Total Price: $<span id="total-price">0.00</span></p>
+    <h3>Your Burger</h3>
+    <ul id="selected-ingredients"></ul>
+    <p>Total Price: $<span id="total-price">0.00</span></p>
+
+    <form method="POST" action="{% url 'place_order' %}" id="order-form">
+        {% csrf_token %}
+        <input type="hidden" name="burger_data" id="custom-burger-data">
+        <button type="submit" class="btn btn-primary" id="place-order-btn" disabled>
+            Place Order
+        </button>
+    </form>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -31,6 +46,36 @@
         const selectedIngredientsElement = document.getElementById("selected-ingredients");
         const totalPriceElement = document.getElementById("total-price");
         const burgerDataInput = document.getElementById("custom-burger-data");
+        const orderButton = document.getElementById("place-order-btn");
+        
+        const updateSelectedIngredients = () => {
+            selectedIngredientsElement.innerHTML = "";
+            const selectedIngredients = Array.from(ingredients.values());
+            selectedIngredients.forEach(({ name, price, quantity }) => {
+                const li = document.createElement("li");
+                li.textContent = `${name} x ${quantity} - $${(price * quantity).toFixed(2)}`;
+                selectedIngredientsElement.appendChild(li);
+            });
+            
+            // Update the hidden input with the correct data structure
+            const burgerData = Array.from(ingredients.entries()).map(([id, data]) => ({
+                ingredientId: id,  // Changed from 'id' to 'ingredientId'
+                name: data.name,
+                price: data.price,
+                quantity: data.quantity
+            }));
+            burgerDataInput.value = JSON.stringify(burgerData);
+        };
+
+        const updateTotalPrice = () => {
+            const totalPrice = Array.from(ingredients.values())
+                .reduce((sum, { price, quantity }) => sum + (price * quantity), 0);
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        };
+
+        const updateOrderButton = () => {
+            orderButton.disabled = ingredients.size === 0;
+        };
 
         document.querySelectorAll(".ingredient-checkbox").forEach(checkbox => {
             checkbox.addEventListener("change", (e) => {
@@ -50,6 +95,7 @@
 
                 updateSelectedIngredients();
                 updateTotalPrice();
+                updateOrderButton();
             });
         });
 
@@ -65,22 +111,6 @@
                 }
             });
         });
-
-        const updateSelectedIngredients = () => {
-            selectedIngredientsElement.innerHTML = "";
-            const selectedIngredients = Array.from(ingredients.values());
-            selectedIngredients.forEach(({ name, price, quantity }) => {
-                const li = document.createElement("li");
-                li.textContent = `${name} x ${quantity} - $${(price * quantity).toFixed(2)}`;
-                selectedIngredientsElement.appendChild(li);
-            });
-            burgerDataInput.value = JSON.stringify(selectedIngredients);
-        };
-
-        const updateTotalPrice = () => {
-            const totalPrice = Array.from(ingredients.values()).reduce((sum, { price, quantity }) => sum + (price * quantity), 0);
-            totalPriceElement.textContent = totalPrice.toFixed(2);
-        };
     });
 </script>
 {% endblock %}

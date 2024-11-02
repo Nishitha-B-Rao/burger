@@ -1,16 +1,34 @@
 <!-- order_confirmation.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Order Summary</h2>
-<p>Customer: {{ user.username }}</p>
-<ul>
-    {% for ingredient, quantity in ingredients %}
-        <li>{{ ingredient.name }} - Quantity: {{ quantity }}</li>
-    {% endfor %}
-</ul>
-<p>Total Price: ${{ total_price }}</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Place Order</button>
-</form>
+<div class="container">
+    <h1>Order Confirmation</h1>
+    <div class="card">
+        <div class="card-body">
+            <h2>Order #{{ order.id }}</h2>
+            <p>Status: <span class="badge bg-primary">{{ order.status }}</span></p>
+            <p>Date: {{ order.created_at }}</p>
+            
+            <h3>Your Custom Burger</h3>
+            <ul>
+                {% for item in order.burger.ingredients.all %}
+                    <li>{{ item.ingredient.name }} x {{ item.quantity }}</li>
+                {% endfor %}
+            </ul>
+            
+            <p class="font-weight-bold">Total Price: ${{ order.burger.total_price }}</p>
+            
+            <div class="mt-4">
+                <h4>What's Next?</h4>
+                <ol>
+                    <li>We'll start preparing your burger once the order is confirmed</li>
+                    <li>You'll receive updates about your order status</li>
+                    <li>Pick up your order when it's ready!</li>
+                </ol>
+            </div>
+            
+            <a href="{% url 'customize_burger' %}" class="btn btn-primary">Order Another Burger</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

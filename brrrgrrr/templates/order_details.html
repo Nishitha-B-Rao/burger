@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Order #{{ order.id }} Details</h1>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+
+    <div class="row">
+        <!-- Order Information -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Customer:</strong> {{ order.user.username }}</p>
+                            <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y H:i" }}</p>
+                            <p><strong>Total Price:</strong> ${{ order.burger.total_price }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{{ order.status|lower }}-subtle text-{{ order.status|lower }}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </p>
+                            <form method="POST" action="{% url 'update_order_status' order.id %}" class="mt-2">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <select name="status" class="form-select">
+                                        {% for status_code, status_name in status_choices %}
+                                        <option value="{{ status_code }}" {% if status_code == order.status %}selected{% endif %}>
+                                            {{ status_name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Update Status</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Burger Details -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Burger Details</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.burger.ingredients.all %}
+                            <tr>
+                                <td>{{ item.ingredient.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.ingredient.price }}</td>
+                                <td>${{ item.ingredient.price }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="table-active">
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td><strong>${{ order.burger.total_price }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Timeline -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Order Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        {% for status_code, status_name in status_choices %}
+                        <div class="timeline-item {% if status_code == order.status %}active{% endif %}">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <h6>{{ status_name }}</h6>
+                                {% if status_code == order.status %}
+                                <p class="text-muted">Current Status</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        position: relative;
+        padding: 1rem 0;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 3rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #e9ecef;
+        transform: translateX(-25%);
+    }
+
+    .timeline-item.active .timeline-marker {
+        background: #0d6efd;
+    }
+
+    .timeline-content {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+    }
+
+    .timeline-item.active .timeline-content {
+        background: #f8f9fa;
+    }
+</style>
+{% endblock %}

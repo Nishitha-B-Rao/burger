@@ -33,3 +33,25 @@ class CustomBurgerIngredient(models.Model):
     def __str__(self):
         return f"{self.quantity}x {self.ingredient.name} for {self.burger}"
 
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('CONFIRMED', 'Confirmed'),
+        ('PREPARING', 'Preparing'),
+        ('READY', 'Ready for Pickup'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELLED', 'Cancelled'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    burger = models.ForeignKey(CustomBurger, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(default=timezone.now)
+    notes = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"Order #{self.id} - {self.user.username}'s Burger ({self.status})"

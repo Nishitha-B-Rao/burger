@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>{{ form.instance.pk|yesno:"Edit Ingredient,Add Ingredient" }}</h2>
-<form method="post" enctype="multipart/form-data" class="mt-4">
+<form method="post" enctype="multipart/form-data" class="mt-4" id="ingredientForm">
     {% csrf_token %}
     
     <!-- Ingredient Name -->
@@ -27,8 +27,7 @@
 
     <!-- Ingredient Availability -->
     <div class="form-group form-check">
-        <input type="hidden" name="is_available" value="False">  <!-- This line is crucial -->
-        {{ form.is_available }}  <!-- This renders the checkbox -->
+        {{ form.is_available }}
         <label for="{{ form.is_available.id_for_label }}" class="form-check-label">Available</label>
         {% if form.is_available.errors %}
             <div class="text-danger">{{ form.is_available.errors }}</div>
@@ -39,4 +38,26 @@
     <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Update,Add" }}</button>
     <a href="{% url 'ingredient_list' %}" class="btn btn-outline-secondary mt-3">Back to Ingredients</a>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('ingredientForm');
+    const checkbox = document.querySelector('input[name="is_available"]');
+    
+    if (form && checkbox) {
+        // Store the initial checkbox state when the form is submitted
+        form.addEventListener('submit', function() {
+            // Create or update hidden input with current checkbox state
+            let hiddenInput = form.querySelector('input[type="hidden"][name="is_available"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'is_available';
+                form.appendChild(hiddenInput);
+            }
+            hiddenInput.value = checkbox.checked ? 'on' : '';
+        });
+    }
+});
+</script>
 {% endblock %}

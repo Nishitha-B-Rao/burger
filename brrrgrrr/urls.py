@@ -1,6 +1,5 @@
 # urls.py
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -14,7 +13,4 @@ urlpatterns = [
     path('ingredients/add/', views.add_ingredient, name='add_ingredient'),
     path('ingredients/edit/<int:ingredient_id>/', views.edit_ingredient, name='edit_ingredient'),
     path('ingredients/delete/<int:pk>/', views.delete_ingredient, name='delete_ingredient'),
-
-    path('order-confirmation/', views.order_page, name='order_confirmation'),
-    path('orders/', views.admin_orders_view, name='admin_orders'),
 ]

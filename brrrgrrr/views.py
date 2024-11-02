@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import user_passes_test
-from . models import Ingredient, Order, CustomBurger
+from . models import Ingredient
 from . forms import IngredientForm
 
 def home(request):
@@ -85,12 +85,6 @@ def delete_ingredient(request, pk):
     return render(request, 'delete_ingredient.html', {'ingredient': ingredient})
 
 @login_required
-@user_passes_test(is_admin)
-def admin_orders_view(request):
-    orders = Order.objects.select_related('user').all()
-    return render(request, 'admin_orders.html', {'orders': orders})
-
-@login_required
 def customize_burger(request):
     ingredients = Ingredient.objects.filter(is_available=True)
     return render(request, 'customize_burger.html', {'ingredients': ingredients})
@@ -101,29 +95,3 @@ def customize_burger(request):
 def ingredient_list(request):
     ingredients = Ingredient.objects.all()
     return render(request, 'ingredient_list.html', {'ingredients': ingredients})
-
-def order_page(request):
-    if request.method == "POST":
-        # Assuming you have the custom burger ID passed in the request
-        custom_burger_id = request.POST.get('custom_burger_id')
-        
-        try:
-            # Get the custom burger instance
-            custom_burger = CustomBurger.objects.get(id=custom_burger_id, user=request.user)
-
-            # Calculate the total price
-            custom_burger.calculate_total_price()
-
-            # Create an order
-            order = Order.objects.create(
-                customer=request.user,
-                custom_burger=custom_burger,
-                total_price=custom_burger.total_price  # Set total_price directly from the burger
-            )
-
-            return redirect('order_confirmation', order_id=order.id)
-
-        except CustomBurger.DoesNotExist:
-            # Handle the case where the custom burger does not exist
-            return render(request, 'customize_burger.html', {'error': 'Custom burger not found.'}) # Redirect to a confirmation page
-    return render(request, 'customize_burger.html')

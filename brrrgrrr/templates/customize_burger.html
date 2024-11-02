@@ -25,12 +25,6 @@
 <ul id="selected-ingredients"></ul>
 <p>Total Price: $<span id="total-price">0.00</span></p>
 
-<form action="{% url 'order_confirmation' %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="custom_burger_data" id="custom-burger-data">
-    <button type="submit" class="btn btn-primary">Confirm Order</button>
-</form>
-
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const ingredients = new Map();

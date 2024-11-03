@@ -1,0 +1,150 @@
+/* burger_builder.css */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2d3748;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+h2, h3 {
+    color: #4a5568;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.8rem;
+}
+
+#ingredients-list {
+    background-color: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+}
+
+#ingredient-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#ingredient-options li {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s;
+}
+
+#ingredient-options li:last-child {
+    border-bottom: none;
+}
+
+#ingredient-options li:hover {
+    background-color: #edf2f7;
+}
+
+.ingredient-checkbox {
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.ingredient-quantity {
+    margin-left: 1rem;
+    padding: 0.25rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    width: 60px !important;
+    text-align: center;
+}
+
+.ingredient-quantity:disabled {
+    background-color: #edf2f7;
+    cursor: not-allowed;
+}
+
+#selected-ingredients {
+    list-style: none;
+    padding: 1rem;
+    margin: 1rem 0;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    min-height: 100px;
+}
+
+#selected-ingredients li {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+}
+
+#selected-ingredients li:last-child {
+    border-bottom: none;
+}
+
+#total-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.btn-primary {
+    background-color: #4299e1;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #3182ce;
+}
+
+.btn-primary:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+}
+
+label {
+    color: #4a5568;
+    margin-left: 0.5rem;
+}
+
+[style*="color: gray"] {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    #ingredient-options li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ingredient-quantity {
+        margin: 0.5rem 0;
+    }
+}

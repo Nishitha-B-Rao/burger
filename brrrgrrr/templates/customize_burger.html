@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+
+
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/burger_builder.css' %}">
 <div class="container py-4">
     <h1>Build Your Own Burger</h1>
     <div id="ingredients-list">
